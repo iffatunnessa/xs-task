@@ -1,11 +1,6 @@
-import React from 'react';
-import { Button, Container, Grid, makeStyles, TextField } from '@material-ui/core';
-import { useForm } from 'react-hook-form';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
+import React, { useEffect, useState } from 'react';
+import { Button, Container, Grid, makeStyles } from '@material-ui/core';
+import Field from '../Create/Field';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,57 +35,44 @@ const useStyles = makeStyles((theme) => ({
 
 const Update = () => {
     const classes = useStyles();
-    const { register, handleSubmit } = useForm();
-    const onSubmit = data => console.log(data);
-    const [value, setValue] = React.useState('female');
-    const handleChange = (event) => {
-        setValue(event.target.value);
-    };
+    const [field, setField] = useState([])
+
+    useEffect(() => {
+        fetch('http://localhost/api/get_form.php')
+            .then(res => res.json())
+            .then(data => {
+                // console.log(data);
+
+                const inputField = Object.values(data.data.fields[0]);
+                const inputField1 = data.data.fields[0];
+                setField(inputField);
+
+                console.log(inputField);
+                console.log(inputField1);
+            })
+    }, [])
+    const handleSubmit = (e) => {
+        fetch('http://localhost/api/submit_form.php')
+        .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
+            e.preventDefault();
+    }
     return (
         <Container maxWidth="sm" className={classes.container}>
             <Grid container>
                 <Grid item xs={6} sm={12}>
                     <div>
                         <h2>Update Form</h2>
-                        <form className={classes.root} onSubmit={handleSubmit(onSubmit)}>
-                            <TextField
-                                id="login-email-input"
-                                label="FullName"
-                                type="text"
-                                {...register("fullname")}
-                            />
-                            <TextField
-                                id="login-password-input"
-                                label="Details"
-                                type="text"
-                                autoComplete="current-password"
-                                name="password"
-                                {...register("details")}
-                            />
-                            <div className={classes.radio}>
-                                <FormControl component="fieldset" >
-                                    <FormLabel component="legend">Gender</FormLabel>
-                                    <RadioGroup aria-label="gender" name="gender1" value={value} {...register("gender")} onChange={handleChange}>
-                                        <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                        <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                        <FormControlLabel value="other" control={<Radio />} label="Other" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </div>
-
-                            <TextField
-                                id="login-password-input"
-                                label="Work"
-                                type="text"
-                                autoComplete="current-password"
-                                name="password"
-                                {...register("work")}
-                            />
+                        <form className={classes.root} onSubmit={handleSubmit}>
+                            {
+                                field.map(field =>
+                                    <Field field={field} handleSubmit={handleSubmit} />
+                                )
+                            }
                             <Button type='submit' variant="contained" className={classes.btn} >Submit</Button>
                         </form>
-                        {/* {error && (
-                        <p className={classes.errormsg}> {error} </p>
-                    )} */}
                     </div>
                 </Grid>
             </Grid>

@@ -62,28 +62,30 @@ const List = () => {
             setRows(defaultRows);
             setSortOrder('default')
         } else if (sortOrder === 'default') {
-            setSortOrder('ascending'); 
+            setSortOrder('ascending');
         }
 
     }
-
+   
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} aria-label="simple table">
-                <TableHead>
-                    <TableRow>
-                        {
-                            Object.keys(headers).map(keyName =>
-                                <ListTableHeader headers={headers} keyName={headers[keyName]} handleSort={handleSort} />
-                            )
-                        }
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map(rows => <ListTableRow rows={rows}/>)}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <>
+            <TableContainer component={Paper}>
+                <Table className={classes.table} aria-label="simple table">
+                    <TableHead>
+                        <TableRow>
+                            {
+                                Object.keys(headers).map(keyName =>
+                                    <ListTableHeader headers={headers} keyName={headers[keyName]} handleSort={handleSort} />
+                                )
+                            }
+                        </TableRow>
+                    </TableHead>
+                    <TableBody>
+                        {rows.map(rows => <ListTableRow rows={rows} />)}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 };
 
