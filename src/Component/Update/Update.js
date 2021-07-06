@@ -60,18 +60,18 @@ const Update = () => {
                 console.log(data);
             })
 
-        fetch(`http://localhost/api/list.php/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify({
-                value : e.target.value
-            }),
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            },
-        })
-            .then((response) => response.json())
-            .then((json) => console.log(json));
-        e.preventDefault();
+        // fetch(`http://localhost/api/list.php/${id}`, {
+        //     method: 'PUT',
+        //     body: JSON.stringify({
+        //         value : e.target.value
+        //     }),
+        //     headers: {
+        //         'Content-type': 'application/json; charset=UTF-8',
+        //     },
+        // })
+        //     .then((response) => response.json())
+        //     .then((json) => console.log(json));
+        // e.preventDefault();
     }
     return (
         <Container maxWidth="sm" className={classes.container}>
