@@ -1,21 +1,38 @@
 import React from 'react';
-import { TextField } from '@material-ui/core';
+import { makeStyles, TextField } from '@material-ui/core';
 import Radio from './Radio';
 import { useParams } from 'react-router-dom';
 import WorkField from './WorkField';
 
-const Field = ({ field }) => {
-    const { id } = useParams();
-    const { readonly, title, required, type, validate, html_attr, repeater_fields, options, value } = field;
-
-    console.log(repeater_fields, options)
-    const handleChange = (e) => {
-        document.getElementById(html_attr.id).innerText = e.target.value;
+const useStyles = makeStyles((theme) => ({
+    root: {
+        '& .MuiTextField-root': {
+            margin: theme.spacing(1),
+            width: '60ch',
+        },
+    },
+    btn: {
+        background: "#2773bb",
+        textTransform: 'capitalize',
+        color: 'white',
+        padding: 4,
+        borderRadius: "4px"
+    },
+    radio: {
+        fontSize: 10,
+        paddingLeft: 8,
+        paddingTop: 30,
     }
-    const handleRepeater = (repeater_fields) => {
-        repeater_fields = Object.values(repeater_fields);
-        // console.log(repeater_fields)
-        repeater_fields.map(newField=> <WorkField newField={newField} />);
+}));
+
+const Field = ({ field, isUpdate }) => {
+    const { id } = useParams();
+    const classes = useStyles();
+    const { readonly, title, required, type, validate, html_attr, repeater_fields, options, value } = field;
+    const handleChange = (e) => {
+        if (isUpdate) {
+        document.getElementById(html_attr.id).innerText = e.target.value;
+        }
     }
     return (
         <>
@@ -23,7 +40,7 @@ const Field = ({ field }) => {
                 <select style={{ border: 'none', padding: '10px', color: 'grey', marginBottom: 30, textSize: '40px' }} component="fieldset">
                     <label component="legend">{title}</label>
                     {
-                        options.map(options => <option value={options.key} className={html_attr.class}
+                        options.map(options => <option  onBlur={handleChange} value={options.key} className={html_attr.class}
                             data_something={html_attr.data_something}
                             validate={validate} label={options.label} />)
                     }
@@ -32,12 +49,12 @@ const Field = ({ field }) => {
                 : (title === 'Gender' && type === 'radio') ? <div>
                     <label component="legend">{title}</label>
                     {
-                        options.map(options => <Radio field={field} default={options.default} label={options.label} key={options.key} />)
+                        options.map(options => <Radio  onBlur={handleChange} className={classes.radio} field={field} default={options.default} label={options.label} key={options.key} />)
                     }
                 </div> : (title === 'Work') ?
                     <div>
                         <p> Work </p>
-                        <button onClick={() => { handleRepeater(repeater_fields) }}>+</button>
+                        <WorkField newField={repeater_fields} isUpdate={isUpdate} />
                     </div>
                     : <TextField
                         className={html_attr.class}
@@ -46,12 +63,11 @@ const Field = ({ field }) => {
                         id={html_attr.id}
                         label={title}
                         type={type}
-                        readonly={readonly}
+                        readOnly={readonly}
                         required={required}
                         onChange={handleChange}
                     />
             }
-
         </>
     );
 };

@@ -18,7 +18,7 @@ function App() {
             <Route path="/list">
               <List />
             </Route>
-            <Route path="/update">
+            <Route path="/update/:id">
               <Update />
             </Route>
             <Route path="/create">

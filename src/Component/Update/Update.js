@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Container, Grid, makeStyles } from '@material-ui/core';
 import Field from '../Create/Field';
+import { useParams } from 'react-router-dom';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Update = () => {
+    const { id } = useParams();
     const classes = useStyles();
     const [field, setField] = useState([])
 
@@ -53,11 +55,23 @@ const Update = () => {
     }, [])
     const handleSubmit = (e) => {
         fetch('http://localhost/api/submit_form.php')
-        .then(res => res.json())
+            .then(res => res.json())
             .then(data => {
                 console.log(data);
             })
-            e.preventDefault();
+
+        fetch(`http://localhost/api/list.php/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify({
+                value : e.target.value
+            }),
+            headers: {
+                'Content-type': 'application/json; charset=UTF-8',
+            },
+        })
+            .then((response) => response.json())
+            .then((json) => console.log(json));
+        e.preventDefault();
     }
     return (
         <Container maxWidth="sm" className={classes.container}>
@@ -68,7 +82,7 @@ const Update = () => {
                         <form className={classes.root} onSubmit={handleSubmit}>
                             {
                                 field.map(field =>
-                                    <Field field={field} handleSubmit={handleSubmit} />
+                                    <Field field={field} handleSubmit={handleSubmit} isUpdate={true} />
                                 )
                             }
                             <Button type='submit' variant="contained" className={classes.btn} >Submit</Button>

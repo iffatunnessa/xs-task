@@ -68,7 +68,7 @@ const Create = () => {
                         <form className={classes.root} onSubmit={handleSubmit}>
                             {
                                 field.map(field =>
-                                    <Field field={field} handleSubmit={handleSubmit} />
+                                    <Field field={field} handleSubmit={handleSubmit} isUpdate={false}/>
                                 )
                             }
                             <Button type='submit' variant="contained" className={classes.btn} >Submit</Button>
